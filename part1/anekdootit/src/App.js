@@ -12,29 +12,55 @@ const App = () => {
   ]
    
   const [selected, setSelected] = useState(0)
+  const [points, setPoints] = useState(new Uint8Array(anecdotes.length))
+  const [mostPoints, setMostPoints] = useState(0)
 
   const handleClick = () => {
-    console.log('clicked')
     setSelected(Math.floor(Math.random() * anecdotes.length))
+  }
+
+  const handleVote = () => {
+    const copy = [...points]
+    copy[selected] += 1
+    setPoints(copy)
+    for (let i = 0; i < anecdotes.length; i++) {
+      if (copy[i] > points[mostPoints]) {
+        setMostPoints(i)
+      }
+    }
   }
 
   return (
     <div>
       <div>
+        <h1>Anecdote of the day</h1>
       {anecdotes[selected]}
+      <p>has {points[selected]} votes </p>
       </div>
       <div>
-      <Button handleClick={handleClick} />
+        <Button handleClick={handleVote} text='vote'/>
+        <Button handleClick={handleClick} text='next anecdote'/>
+        <Bottom anecdotes = {anecdotes} mostPoints = {mostPoints} points = {points} />
       </div>
     </div>
   )
 }
 
-const Button = ({handleClick}) =>  {
+const Button = ({handleClick, text}) =>  {
   return (
     <button onClick={handleClick}>
-      another anecdote
+      {text}
     </button>
+  )
+}
+
+const Bottom = (props) => {
+  return (
+    <div>
+      <h1>Anecdote with most votes</h1>
+      <p> { props.anecdotes[props.mostPoints] } </p>
+      <p> has { props.points[props.mostPoints] } points</p>
+    </div>
   )
 }
 
