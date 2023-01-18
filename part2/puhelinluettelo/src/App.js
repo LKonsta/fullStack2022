@@ -8,13 +8,26 @@ const App = () => {
   const [showAll, setShowAll] = useState(true)
 
   const addPerson = (event) => {
-    event.preventDefault()
-    const personObject = {
-      name: newName,
-      id: persons.length + 1,
+    
+    var taken = false
+    persons.forEach(function(item, index, array) {
+      if (newName === item.name) {
+        taken = true
+      }
+    })
+    if (!taken) {
+      event.preventDefault()
+      const personObject = {
+        name: newName,
+        id: persons.length + 1,
+      }
+      setPersons(persons.concat(personObject))
+      setNewName('')
+      
+    } else {
+      window.alert(newName + ' is already added to phonebook')
     }
-    setPersons(persons.concat(personObject))
-    setNewName('')
+    
   }
 
   const handleNameChange = (event) => {
